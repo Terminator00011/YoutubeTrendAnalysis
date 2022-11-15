@@ -16,18 +16,21 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.JsonGenerator;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
+import com.google.api.client.json.JsonParser;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringWriter;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
+
 
 public class GatherData {
     private static final String CLIENT_SECRETS= "client_secret.json";
@@ -71,7 +74,39 @@ public class GatherData {
             .setApplicationName(APPLICATION_NAME)
             .build();
     }
+    
+    public static Node populateNode(JsonParser parser) throws IOException
+    {
+        while(parser.getText() != "videoId")
+            parser.nextToken();
+        parser.nextToken();
+        String tempVideoID = parser.getText();
+        while(parser.getText() != "channelId")
+            parser.nextToken();
+        parser.nextToken();
+        String tempChannelId = parser.getText();
 
+        while(parser.getText() != "channelTitle")
+            parser.nextToken();
+        parser.nextToken();
+        String tempChannelTitle = parser.getText();
+        
+        while(parser.getText() != "publishedAt")
+            parser.nextToken();
+        parser.nextToken();
+        String tempPublishDate = parser.getText();
+
+        while(parser.getText() != "title")
+            parser.nextToken();
+        parser.nextToken();
+        String tempTitle = parser.getText();
+
+        
+    
+
+        return new Node(tempChannelId, tempChannelTitle, tempTitle, tempPublishDate, 0, tempVideoID);
+    }
+    
     /**
      * Call function to create API service object. Define and
      * execute API request. Print API response.
@@ -80,6 +115,7 @@ public class GatherData {
      */
     public static void main(String[] args)
         throws GeneralSecurityException, IOException, GoogleJsonResponseException {
+
         YouTube youtubeService = getService();
         // Define and execute the API request
         YouTube.Search.List request = youtubeService.search()
@@ -88,13 +124,24 @@ public class GatherData {
             .setQ("surfing")
             .execute();
 
+
+        OutputStream out = new FileOutputStream("output.json");
+        JsonGenerator generator = JSON_FACTORY.createJsonGenerator(out, StandardCharsets.UTF_8);
+
+        generator.enablePrettyPrint();
+        generator.writeStartObject();
         
-        //response.setFactory(JSON_FACTORY);
+        generator.writeFieldName("data");
+        generator.serialize(response);
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter("output.json"));
-        writer.write(JSON_FACTORY.toPrettyString(response));
-        writer.close();
+        generator.writeEndObject();
+        generator.flush();
+        
 
-        System.out.println(JSON_FACTORY.toPrettyString(response));
+        InputStream input = new FileInputStream("output.json");
+
+        JsonParser parser = JSON_FACTORY.createJsonParser(input, StandardCharsets.UTF_8);
+    
+        Node node = populateNode(parser);
     }
 }
