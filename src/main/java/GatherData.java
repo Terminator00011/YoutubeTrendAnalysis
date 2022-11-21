@@ -19,7 +19,6 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +28,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Map;
 
 
 public class GatherData {
@@ -113,7 +111,7 @@ public class GatherData {
      *
      * @throws GeneralSecurityException, IOException, GoogleJsonResponseException
      */
-    public static void main(String[] args)
+    public static void createJson()
         throws GeneralSecurityException, IOException, GoogleJsonResponseException {
 
         YouTube youtubeService = getService();
@@ -136,12 +134,5 @@ public class GatherData {
 
         generator.writeEndObject();
         generator.flush();
-        
-
-        InputStream input = new FileInputStream("output.json");
-
-        JsonParser parser = JSON_FACTORY.createJsonParser(input, StandardCharsets.UTF_8);
-    
-        Node node = populateNode(parser);
     }
 }

@@ -7,13 +7,17 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = 'GatherData'
+mainClassName = 'main'
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 version = '1.0'
 
 repositories {
     mavenCentral()
+}
+
+run {
+    standardInput = System.in
 }
 
 dependencies {
