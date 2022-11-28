@@ -1,29 +1,31 @@
-import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.JsonGenerator;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.json.JsonParser;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.util.Scanner;
+
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonParser;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.youtube.YouTube;
 
 public class main 
 {
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     public static void main(String[] args) throws GeneralSecurityException, IOException, GoogleJsonResponseException 
     {
-        /* 
-        InputStream input = new FileInputStream("output.json");
+        YouTube youtubeService = GatherData.getService();
 
-        JsonParser parser = JSON_FACTORY.createJsonParser(input, StandardCharsets.UTF_8);
+        YouTube.Videos.List statsRequest = youtubeService.videos().list("statistics");
+        
+        InputStream inputStream = new FileInputStream("output.json");
+
+        JsonParser parser = JSON_FACTORY.createJsonParser(inputStream, StandardCharsets.UTF_8);
     
-        Node node = populateNode(parser);
+        Node node = GatherData.populateNode(parser, statsRequest);
 
-        */
         Scanner scan = new Scanner(System.in);
         boolean run = true;
 
@@ -47,10 +49,8 @@ public class main
                             "/* 9. Exit                                *\\" + "\n" +
                             "\\\\*****************************************//");
         System.out.println(title + "\n" +  menu);
-    
 
         
-
         while(run)
         {
             int input = 0; 
@@ -59,6 +59,7 @@ public class main
             switch(input)
             {
                 case 1:
+                    GatherData.createJson();
                     break;
                 case 2: 
                     break;
@@ -84,10 +85,6 @@ public class main
         }
         
         scan.close();
-        
-
-        
-
     }
 }
 
