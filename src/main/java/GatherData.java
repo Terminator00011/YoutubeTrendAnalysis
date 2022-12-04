@@ -126,7 +126,7 @@ public class GatherData {
      *
      * @throws GeneralSecurityException, IOException, GoogleJsonResponseException
      */
-    public static void createJson()
+    public static void createJson(String videoOne, String fileName)
         throws GeneralSecurityException, IOException, GoogleJsonResponseException {
 
         YouTube youtubeService = getService();
@@ -135,10 +135,10 @@ public class GatherData {
             .list("snippet");
 
         SearchListResponse response = request.setMaxResults(25L)
-            .setQ("surfing")
+            .setQ(videoOne)
             .execute();
 
-        OutputStream out = new FileOutputStream("output.json");
+        OutputStream out = new FileOutputStream(fileName + ".json");
         JsonGenerator generator = JSON_FACTORY.createJsonGenerator(out, StandardCharsets.UTF_8);
 
         generator.enablePrettyPrint();

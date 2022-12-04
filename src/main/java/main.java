@@ -16,18 +16,22 @@ public class main
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     public static void main(String[] args) throws GeneralSecurityException, IOException, GoogleJsonResponseException 
     {
+
+        //TODO: Fix so that it is modular
+
         YouTube youtubeService = GatherData.getService();
 
         YouTube.Videos.List statsRequest = youtubeService.videos().list("statistics");
-        
-        InputStream inputStream = new FileInputStream("output.json");
-
-        JsonParser parser = JSON_FACTORY.createJsonParser(inputStream, StandardCharsets.UTF_8);
-    
-        Node node = GatherData.populateNode(parser, statsRequest);
 
         Scanner scan = new Scanner(System.in);
         boolean run = true;
+
+        Map map = new Map();
+
+        String videoOne = "";
+        String fileNameOne = "";
+        String videoTwo = "";
+        String fileNameTwo = "";
 
         String title = ("____    ____  ______    __    __  .___________. __    __  .______    _______     _______       ___   .___________.    ___              ___      .__   __.      ___       __      ____    ____  _______. __       _______." + "\n" +
                             "\\   \\  /   / /  __  \\  |  |  |  | |           ||  |  |  | |   _  \\  |   ____|   |       \\     /   \\  |           |   /   \\            /   \\     |  \\ |  |     /   \\     |  |     \\   \\  /   / /       ||  |     /       |" + "\n" +
@@ -40,13 +44,11 @@ public class main
                             "/*                                        *\\" + "\n" +
                             "/* 1. Print Map                           *\\" + "\n" + 
                             "/* 2. Print Hash map                      *\\" + "\n" +
-                            "/* 3. Create Map                          *\\" + "\n" + 
-                            "/* 4. Create Hash map                     *\\" + "\n" +
-                            "/* 5. Choose Video Type 1                 *\\" + "\n" +
-                            "/* 6. Choose Video Type 2                 *\\" + "\n" + 
-                            "/* 7. Compare Data types                  *\\" + "\n" +
-                            "/* 8. Print this menu again               *\\" + "\n" +
-                            "/* 9. Exit                                *\\" + "\n" +
+                            "/* 3. Fill JSON                          *\\" + "\n" + 
+                            "/* 4. Create Maps                          *\\" + "\n" +
+                            "/* 5. Compare times                  *\\" + "\n" +
+                            "/* 6. Print this menu again               *\\" + "\n" +
+                            "/* 7. Exit                                *\\" + "\n" +
                             "\\\\*****************************************//");
         System.out.println(title + "\n" +  menu);
 
@@ -59,27 +61,75 @@ public class main
             switch(input)
             {
                 case 1:
-                    GatherData.createJson();
+                    System.out.println("What do you want to compare?: " + "\n" + "1. Publish Dates" + "\n" + "2. Views" + "\n" + "3. Like/Dislike count");
+
+                    int choice; 
+                    if(scan.hasNextInt())
+                        choice = scan.nextInt();
+
+                    if(choice == 1)
+                        for(Node node : map)
+                            System.out.println(node.getPublishDate());
+                    else if(choice == 2)
+                        for(Node node : map)
+                            System.out.println(node.getViews());
+                    else if(choice == 3)
+                        for(Node node : map)
+                            System.out.println(node.getDislikeCount() + " " + node.getDislikeCount());
+                    else
+                        System.out.println("Invalid input");
+        
                     break;
                 case 2: 
+                    if(choice == 1)
+                        for(Node node : hashMap)
+                            System.out.println(node.getPublishDate());
+                    else if(choice == 2)
+                        for(Node node : hashMap)
+                            System.out.println(node.getViews());
+                    else if(choice == 3)
+                        for(Node node : hashMap)
+                            System.out.println(node.getDislikeCount() + " " + node.getDislikeCount());
+                    else
+                        System.out.println("Invalid input");
                     break;
+
                 case 3:
+                    System.out.println("Enter the first type of video you want to search: ");
+                    videoOne = scan.next();
+                    System.out.println("Enter the name of the file you want to create: ");
+                    fileNameOne = scan.next();
+                    System.out.println("Enter the second video type you want to search: ");
+                    videoTwo = scan.next();
+                    System.out.println("Enter the name of the file you want to create: ");
+                    fileNameTwo = scan.next();
+                    
+
+                    GatherData.createJson(videoOne, fileNameOne);
+                    GatherData.createJson(videoTwo, fileNameTwo);
                     break;
                 case 4:
+                    InputStream inputStream = new FileInputStream(fileNameOne);
+
+                    JsonParser parser = JSON_FACTORY.createJsonParser(inputStream, StandardCharsets.UTF_8);
+                    for(int i = 0; i < 10000; i++)
+                    {
+                        Node tempNode = GatherData.populateNode(parser, statsRequest);
+
+                        map.insert(tempNode.getChannelID(),tempNode.getChannelID(), tempNode.getVideoTitle(), tempNode.getPublishDate(), tempNode.getViews(), tempNode.getVideoID(), tempNode.getLikeCount(), tempNode.getDislikeCount());
+                    }
                     break;
                 case 5:
                     break;
-                case 6:
-                    break;
-                case 7:
-                    break;
-                case 8: 
+                case 6: 
                     System.out.println(title + "\n" +  menu);
                     break;
-                case 9:
+                case 7:
                     System.out.println("Exiting");
                     run = false; 
                     break;
+                default:
+                    System.out.println("Invalid input");
             }
 
         }
