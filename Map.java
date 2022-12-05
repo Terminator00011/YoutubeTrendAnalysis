@@ -108,12 +108,12 @@ public class Map {
                     //left-left case: right rotation
                     if (curr.left != null && curr.left.red)
                     {
-                        // update right rotation
+                        rightRotation = true;
                     }
                     //left-right case: left-right rotation
                     else if (curr.right != null && curr.right.red)
                     {
-                        // update left right rotation
+                        leftRightRotation = true;
                     }
                 }
                 //red uncle case (flip colors)
@@ -135,12 +135,12 @@ public class Map {
                     //right-left case: right-left rotation
                     if (curr.left != null && curr.left.red)
                     {
-                        // update right left rotation
+                        rightLeftRotation = true;
                     }
                     //right-right case: left rotation
                     else if (curr.right != null && curr.right.red)
                     {
-                        // update left rotation
+                        leftRotation = true;
                     }
                 }
                 //red uncle case (flip colors)
