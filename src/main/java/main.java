@@ -16,9 +16,6 @@ public class main
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     public static void main(String[] args) throws GeneralSecurityException, IOException, GoogleJsonResponseException 
     {
-
-        //TODO: Fix so that it is modular
-
         YouTube youtubeService = GatherData.getService();
 
         YouTube.Videos.List statsRequest = youtubeService.videos().list("statistics");
@@ -26,12 +23,13 @@ public class main
         Scanner scan = new Scanner(System.in);
         boolean run = true;
 
-        Map map = new Map();
 
         String videoOne = "";
-        String fileNameOne = "";
+        String fileNameOne = "gaming.json";
         String videoTwo = "";
-        String fileNameTwo = "";
+        String fileNameTwo = "test.json";
+
+        Map map = new Map();
 
         String title = ("____    ____  ______    __    __  .___________. __    __  .______    _______     _______       ___   .___________.    ___              ___      .__   __.      ___       __      ____    ____  _______. __       _______." + "\n" +
                             "\\   \\  /   / /  __  \\  |  |  |  | |           ||  |  |  | |   _  \\  |   ____|   |       \\     /   \\  |           |   /   \\            /   \\     |  \\ |  |     /   \\     |  |     \\   \\  /   / /       ||  |     /       |" + "\n" +
@@ -55,7 +53,7 @@ public class main
         
         while(run)
         {
-            int input = 0; 
+            int input = 0;
             if(scan.hasNextInt())
                 input = scan.nextInt();
             switch(input)
@@ -63,24 +61,17 @@ public class main
                 case 1:
                     System.out.println("What do you want to compare?: " + "\n" + "1. Publish Dates" + "\n" + "2. Views" + "\n" + "3. Like/Dislike count");
 
-                    int choice; 
+                    int choice = 0; 
                     if(scan.hasNextInt())
                         choice = scan.nextInt();
 
-                    if(choice == 1)
-                        for(Node node : map)
-                            System.out.println(node.getPublishDate());
-                    else if(choice == 2)
-                        for(Node node : map)
-                            System.out.println(node.getViews());
-                    else if(choice == 3)
-                        for(Node node : map)
-                            System.out.println(node.getDislikeCount() + " " + node.getDislikeCount());
-                    else
-                        System.out.println("Invalid input");
-        
+    
+                    map.inOrder(choice);
+
                     break;
                 case 2: 
+                    System.out.println("not implemented yet ");
+                    /* 
                     if(choice == 1)
                         for(Node node : hashMap)
                             System.out.println(node.getPublishDate());
@@ -92,6 +83,7 @@ public class main
                             System.out.println(node.getDislikeCount() + " " + node.getDislikeCount());
                     else
                         System.out.println("Invalid input");
+                    */
                     break;
 
                 case 3:
@@ -112,10 +104,10 @@ public class main
                     InputStream inputStream = new FileInputStream(fileNameOne);
 
                     JsonParser parser = JSON_FACTORY.createJsonParser(inputStream, StandardCharsets.UTF_8);
-                    for(int i = 0; i < 10000; i++)
+                    for(int i = 0; i < 24; i++)
                     {
                         Node tempNode = GatherData.populateNode(parser, statsRequest);
-
+                        
                         map.insert(tempNode.getChannelID(),tempNode.getChannelID(), tempNode.getVideoTitle(), tempNode.getPublishDate(), tempNode.getViews(), tempNode.getVideoID(), tempNode.getLikeCount(), tempNode.getDislikeCount());
                     }
                     break;

@@ -16,8 +16,11 @@ public class Node
     private BigInteger likeCount;
     private BigInteger dislikeCount;
 
-    private Node left = null;
-    private Node right = null;
+    public Node right = null;
+    public Node left = null; 
+    public Node parent = null; 
+
+    boolean red = true; 
 
     public String getChannelID() { return channelID; }
     public String getChannelTitle() { return channelTitle; }
@@ -27,6 +30,11 @@ public class Node
     public String getVideoID() { return videoID; }
     public BigInteger getLikeCount() { return likeCount; }
     public BigInteger getDislikeCount() { return dislikeCount; }
+
+    public void swapColor() { red = false; }
+
+    public void black() { red = false; }
+    public void red() { red = true; }
 
     public Node(String channelID, String channelTitle, String videoTitle, String publisDate, BigInteger views, String videoID, BigInteger likeCount, BigInteger dislikeCount)
     {
