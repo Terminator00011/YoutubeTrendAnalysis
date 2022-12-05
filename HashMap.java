@@ -50,5 +50,12 @@ public class HashMap {
         }
     }
 
+    public void printHashMap()
+    {
+        for (int i = 0; i < hashMap.length; i++)
+        {
+            hashMap[i].inOrder();
+        }
+    }
 
 }
