@@ -1,4 +1,4 @@
-// Referenced https://www.geeksforgeeks.org/method-class-hashcode-method-in-java/
+// Referenced https://www.geeksforgeeks.org/method-class-hashcode-method-in-java/ to know how to use Java's hash function
 
 import java.math.BigInteger;
 
