@@ -33,13 +33,11 @@ import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Set;
 import java.util.List;
-import java.util.Map.Entry;
 
 
 public class GatherData {
-    private static final String CLIENT_SECRETS= "client_secret.json";
+    private static final String CLIENT_SECRETS= "client_secret_817907432942-glt34kslnheai6ao17gul4m6qe4o3hes.apps.googleusercontent.com.json";
     private static final Collection<String> SCOPES =
         Arrays.asList("https://www.googleapis.com/auth/youtube.force-ssl");
 
@@ -55,7 +53,7 @@ public class GatherData {
      */
     public static Credential authorize(final NetHttpTransport httpTransport) throws IOException {
         // Load client secrets.
-        InputStream in = ApiExample.class.getResourceAsStream(CLIENT_SECRETS);
+        InputStream in = GatherData.class.getResourceAsStream(CLIENT_SECRETS);
         GoogleClientSecrets clientSecrets =
           GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
         // Build flow and trigger user authorization request.
@@ -135,29 +133,34 @@ public class GatherData {
         YouTube.Search.List request = youtubeService.search()
             .list("snippet");
 
-        
-
-
         SearchListResponse response = request.setMaxResults(500L)
             .setQ(videoOne)
             .execute();
 
         List <SearchResult> list =  response.getItems();
-
+        int count = 0; 
         while(response.getNextPageToken() != null)
         {
-
-            request = youtubeService.search().list("snippet").setPageToken(response.getNextPageToken());
-            
+            String tempToken = response.getNextPageToken(); 
+            if(list.size() >= 6250)
+                break;
+            else if(count >= 10)
+            {
+                response.clear();
+                youtubeService = getService();
+                count = 0;
+            }
+        
+            request = youtubeService.search().list("snippet").setPageToken(tempToken);
             response = request.setMaxResults(500L).setQ(videoOne).execute();
 
+            System.out.println(response.getNextPageToken());
+
             list.addAll(response.getItems());
+            count++;
         }
 
         System.out.println(list.size());
-
-        for(SearchResult var : list)
-            System.out.println(var.getId());
 
         OutputStream out = new FileOutputStream(fileName + ".json");
         JsonGenerator generator = JSON_FACTORY.createJsonGenerator(out, StandardCharsets.UTF_8);
@@ -166,7 +169,7 @@ public class GatherData {
         generator.writeStartObject();
         
         generator.writeFieldName("data");
-        generator.serialize(response);
+        generator.serialize(list);
 
         generator.writeEndObject();
 

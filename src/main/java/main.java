@@ -24,11 +24,11 @@ public class main
         boolean run = true;
 
 
-        String videoOne = "gaming";
-        String fileNameOne = "gaming.json";
+        String videoOne = "";
+        String fileNameOne = "output1.json";
         
         String videoTwo = "";
-        String fileNameTwo = "gamingData.json";
+        String fileNameTwo = "output2.json";
 
         Map map = new Map();
         HashMap hashMap = new HashMap();
@@ -83,7 +83,6 @@ public class main
                     break;
 
                 case 3:
-                    /*
                     System.out.println("Enter the first type of video you want to search: ");
                     videoOne = scan.next();
                     System.out.println("Enter the name of the file you want to create: ");
@@ -92,32 +91,37 @@ public class main
                     videoTwo = scan.next();
                     System.out.println("Enter the name of the file you want to create: ");
                     fileNameTwo = scan.next();
-                    */
+                
                     
 
                     GatherData.createJson(videoOne, fileNameOne);
-                    //GatherData.createJson(videoTwo, fileNameTwo);
+                    GatherData.createJson(videoTwo, fileNameTwo);
                     break;
                 case 4:
                     InputStream inputStream = new FileInputStream(fileNameOne);
-                    InputStream inputStream2 = new FileInputStream(fileNameOne);
+                    InputStream inputStream2 = new FileInputStream(fileNameTwo);
 
                     JsonParser parser = JSON_FACTORY.createJsonParser(inputStream, StandardCharsets.UTF_8);
                     JsonParser parser2 = JSON_FACTORY.createJsonParser(inputStream2, StandardCharsets.UTF_8);
 
-                    for(int i = 0; i < 23; i++)
+                    //TODO: Getting error right at 100
+
+                    for(int i = 0; i < 1252; i++)
                     {
                         Node tempNode = GatherData.populateNode(parser, statsRequest);
                         //System.out.println(i);
                         map.insert(tempNode.getChannelID(),tempNode.getChannelID(), tempNode.getVideoTitle(), tempNode.getPublishDate(), tempNode.getViews(), tempNode.getVideoID(), tempNode.getLikeCount(), tempNode.getDislikeCount());
+                        System.out.println(i);
                     }
-
+                    
+                
                     for(int i = 0; i < 23; i++)
                     {
                         Node tempNode = GatherData.populateNode(parser2, statsRequest);
                         //System.out.println(i);
                         hashOpen.insert(tempNode.getChannelID(),tempNode.getChannelID(), tempNode.getVideoTitle(), tempNode.getPublishDate(), tempNode.getViews(), tempNode.getVideoID(), tempNode.getLikeCount(), tempNode.getDislikeCount());
                     }
+                
 
                     break;
                 case 5:
@@ -129,10 +133,9 @@ public class main
                     System.out.println("Exiting");
                     run = false; 
                     break;
-                /* 
                 default:
                     System.out.println("Invalid input");
-                */
+                
             }
 
         }
