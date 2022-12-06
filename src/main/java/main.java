@@ -57,8 +57,10 @@ public class main
         while(run)
         {
             int input = 0;
+            
             if(scan.hasNextInt())
                 input = scan.nextInt();
+            
             switch(input)
             {
                 case 1:
@@ -83,6 +85,7 @@ public class main
                     break;
 
                 case 3:
+                /*
                     System.out.println("Enter the first type of video you want to search: ");
                     videoOne = scan.next();
                     System.out.println("Enter the name of the file you want to create: ");
@@ -91,6 +94,7 @@ public class main
                     videoTwo = scan.next();
                     System.out.println("Enter the name of the file you want to create: ");
                     fileNameTwo = scan.next();
+                    */
                 
                     
 
@@ -110,17 +114,20 @@ public class main
                     {
                         Node tempNode = GatherData.populateNode(parser, statsRequest);
                         //System.out.println(i);
+                        if(i == 100)
+                            System.out.print("debug");
                         map.insert(tempNode.getChannelID(),tempNode.getChannelID(), tempNode.getVideoTitle(), tempNode.getPublishDate(), tempNode.getViews(), tempNode.getVideoID(), tempNode.getLikeCount(), tempNode.getDislikeCount());
                         System.out.println(i);
                     }
                     
-                
+                    /*
                     for(int i = 0; i < 23; i++)
                     {
                         Node tempNode = GatherData.populateNode(parser2, statsRequest);
                         //System.out.println(i);
                         hashOpen.insert(tempNode.getChannelID(),tempNode.getChannelID(), tempNode.getVideoTitle(), tempNode.getPublishDate(), tempNode.getViews(), tempNode.getVideoID(), tempNode.getLikeCount(), tempNode.getDislikeCount());
                     }
+                    */
                 
 
                     break;
@@ -133,9 +140,6 @@ public class main
                     System.out.println("Exiting");
                     run = false; 
                     break;
-                default:
-                    System.out.println("Invalid input");
-                
             }
 
         }
