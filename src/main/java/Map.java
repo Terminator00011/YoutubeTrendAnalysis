@@ -78,21 +78,27 @@
         {
             curr = rightRotation(curr);
             rightRotation = false;
+            consecutiveRed = false;
         }
         else if (leftRotation)
         {
             curr = leftRotation(curr);
             leftRotation = false;
+            consecutiveRed = false;
+
         }
         else if (leftRightRotation)
         {
             curr = leftRightRotation(curr);
             leftRightRotation = false;
+            consecutiveRed = false;
+
         }
         else if (rightLeftRotation)
         {
             curr = rightLeftRotation(curr);
             rightLeftRotation = false;
+            consecutiveRed = false;
         }
 
         //Check for consecutive red nodes
@@ -161,6 +167,7 @@
 
     private Node leftRotation(Node curr)
     {
+        System.out.println("Left Rotation");
         Node temp = curr.right;
         curr.right = temp.left;
         temp.left = curr;
@@ -175,6 +182,7 @@
 
     private Node rightRotation(Node curr)
     {
+        System.out.println("Right Rotation");
         Node temp = curr.left;
         curr.left = temp.right;
         temp.right = curr;
@@ -188,8 +196,10 @@
     }
     private Node rightLeftRotation(Node curr)
     {
+        System.out.println("Right Left Rotation");
         //Step 1
         Node temp = curr.right;
+
         curr.right = temp.left;
         temp.left = temp.left.right;
         curr.right.right = temp;
@@ -198,6 +208,7 @@
     }
     private Node leftRightRotation(Node curr)
     {
+        System.out.println("Left Right Rotation");
         //Step 1
         Node temp = curr.left;
         curr.left = temp.right;
@@ -230,10 +241,4 @@
 
         return curr;
     }
-
-    private void printDecider(Node curr, int arg)
-    {
-        
-    }
-
 }
