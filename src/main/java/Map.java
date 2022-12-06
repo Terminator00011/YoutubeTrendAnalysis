@@ -76,12 +76,16 @@
         //Get the rotation info from the previous stack frame, reset to false after a rotation occurs
         if (rightRotation)
         {
+            System.out.print("right");
             curr = rightRotation(curr);
             rightRotation = false;
             consecutiveRed = false;
         }
         else if (leftRotation)
         {
+            System.out.print("left");
+
+            //it breaks while trying to do a left rotation here 
             curr = leftRotation(curr);
             leftRotation = false;
             consecutiveRed = false;
@@ -89,6 +93,8 @@
         }
         else if (leftRightRotation)
         {
+            System.out.print("left-right");
+
             curr = leftRightRotation(curr);
             leftRightRotation = false;
             consecutiveRed = false;
@@ -96,6 +102,8 @@
         }
         else if (rightLeftRotation)
         {
+            System.out.print("right-left");
+
             curr = rightLeftRotation(curr);
             rightLeftRotation = false;
             consecutiveRed = false;
@@ -168,6 +176,7 @@
     private Node leftRotation(Node curr)
     {
         //System.out.println("Left Rotation");
+        /* 
         Node temp = curr.right;
         curr.right = temp.left;
         temp.left = curr;
@@ -175,13 +184,30 @@
         if (curr.right != null)
             curr.right.parent = curr;
         temp.black();
+
+        /*BREAKS ON THIS LINE RIGHT HERE 
         temp.right.red();
+
         curr.red();
+        */
+        
+
+        Node temp = curr.right;
+        Node y = temp.left;
+        temp.left = curr;
+        curr.right = y;
+        curr.parent = temp;
+        if(y!=null)
+            y.parent = curr;
+        temp.black();
+        temp.left.red();
+
         return temp;
     }
 
     private Node rightRotation(Node curr)
     {
+        /* 
         //System.out.println("Right Rotation");
         Node temp = curr.left;
         curr.left = temp.right;
@@ -192,10 +218,23 @@
         temp.black();
         temp.left.red();
         curr.red();
-        return temp;
+        */
+
+        Node x = curr.left;
+        Node y = x.right;
+        x.right = curr;
+        curr.left = y;
+        curr.parent = x;
+        if(y!=null)
+            y.parent = curr;
+        
+        x.black();
+        x.right.red();
+        return x;
     }
     private Node rightLeftRotation(Node curr)
     {
+        /* 
         //System.out.println("Right Left Rotation");
         //Step 1
         Node temp = curr.right;
@@ -205,9 +244,18 @@
         curr.right.right = temp;
         //Step 2
         return leftRotation(curr);
+        */
+
+        curr.right = rightRotation(curr.right);
+        curr.right.parent = curr;
+        curr = leftRotation(curr);
+        curr.black();
+        curr.red();
+        return curr;
     }
     private Node leftRightRotation(Node curr)
     {
+        /* 
         //System.out.println("Left Right Rotation");
         //Step 1
         Node temp = curr.left;
@@ -215,7 +263,14 @@
         temp.right = temp.right.left;
         curr.left.left = temp;
         //Step 2
-        return rightRotation(curr);
+        */
+        curr.left = leftRotation(curr.left);
+        curr.left.parent = curr;
+        curr = rightRotation(curr);
+        curr.black();
+        curr.right.red();
+
+        return curr;
     }
 
     public void inOrder(int arg)
