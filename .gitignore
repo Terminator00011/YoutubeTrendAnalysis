@@ -10,8 +10,7 @@ build
 
 bin
 
+src/main/resources/client_secret_817907432942-glt34kslnheai6ao17gul4m6qe4o3hes.apps.googleusercontent.com.json
 
-gaming.json
-outputGame.json
-skate.json
-test.json
+src/main/resources/output1
+src/main/resources/output2

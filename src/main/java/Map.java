@@ -167,7 +167,7 @@
 
     private Node leftRotation(Node curr)
     {
-        System.out.println("Left Rotation");
+        //System.out.println("Left Rotation");
         Node temp = curr.right;
         curr.right = temp.left;
         temp.left = curr;
@@ -182,7 +182,7 @@
 
     private Node rightRotation(Node curr)
     {
-        System.out.println("Right Rotation");
+        //System.out.println("Right Rotation");
         Node temp = curr.left;
         curr.left = temp.right;
         temp.right = curr;
@@ -196,7 +196,7 @@
     }
     private Node rightLeftRotation(Node curr)
     {
-        System.out.println("Right Left Rotation");
+        //System.out.println("Right Left Rotation");
         //Step 1
         Node temp = curr.right;
 
@@ -208,7 +208,7 @@
     }
     private Node leftRightRotation(Node curr)
     {
-        System.out.println("Left Right Rotation");
+        //System.out.println("Left Right Rotation");
         //Step 1
         Node temp = curr.left;
         curr.left = temp.right;
