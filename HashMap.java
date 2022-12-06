@@ -1,4 +1,4 @@
-// Referenced https://www.geeksforgeeks.org/method-class-hashcode-method-in-java/ to know how to use Java's hash function
+// Referenced https://www.geeksforgeeks.org/method-class-hashcode-method-in-java/
 
 import java.math.BigInteger;
 
@@ -9,11 +9,22 @@ public class HashMap {
     int size;
     double loadFactor;
 
+    private BigInteger totalSize;
+    private BigInteger viewTotal;
+    private  BigInteger likeTotal;
+    private Node maxView;
+    private Node maxLike;
+
     public HashMap()
     {
         this.hashMap = new Map[16];
         this.size = 0;
         this.loadFactor = 0.75;
+        this.totalSize = BigInteger.ZERO;
+        this.viewTotal = BigInteger.ZERO;
+        this.likeTotal = BigInteger.ZERO;
+        this.maxView = null;
+        this.maxLike = null;
     }
 
     public void insert(String channelID, String channelTitle, String videoTitle, String publishDate, BigInteger views, String videoID, BigInteger likeCount, BigInteger dislikeCount)
@@ -50,12 +61,46 @@ public class HashMap {
         }
     }
 
-    public void printHashMap()
+    public void viewAndLikeTotalHM()
     {
         for (int i = 0; i < hashMap.length; i++)
         {
-            hashMap[i].inOrder();
+            if (hashMap[i] != null)
+            {
+                //Calculates every element's view total and highest viewed video
+                hashMap[i].viewTotal();
+                //Calculates every element's like total and highest liked video
+                hashMap[i].likeTotal();
+
+                //Initialize maxView and maxLike with first element
+                if (maxLike == null && maxView == null)
+                {
+                    maxView = hashMap[i].getMaxView();
+                    maxLike = hashMap[i].getMaxLike();
+                }
+                //Compare and update max if necessary
+                else
+                {
+                    if (hashMap[i].getMaxView().getViews().compareTo(maxView.getViews()) > 0)
+                        maxView = hashMap[i].getMaxView();
+                    if (hashMap[i].getMaxView().getLikeCount().compareTo(maxLike.getLikeCount()) > 0)
+                        maxLike = hashMap[i].getMaxLike();
+                }
+
+                viewTotal = viewTotal.add(hashMap[i].getViewTotal());
+                totalSize = totalSize.add(hashMap[i].getSize());
+                likeTotal = likeTotal.add(hashMap[i].getLikeTotal());
+            }
         }
     }
 
+    public BigInteger getTotalSize() { return totalSize; }
+
+    public BigInteger getViewTotal() { return viewTotal; }
+
+    public BigInteger getLikeTotal() { return likeTotal; }
+
+    public Node getMaxView() { return maxView; }
+
+    public Node getMaxLike() { return maxLike; }
 }
