@@ -24,12 +24,15 @@ public class main
         boolean run = true;
 
 
-        String videoOne = "";
+        String videoOne = "gaming";
         String fileNameOne = "gaming.json";
+        
         String videoTwo = "";
-        String fileNameTwo = "test.json";
+        String fileNameTwo = "gamingData.json";
 
         Map map = new Map();
+        HashMap hashMap = new HashMap();
+        HashMapOpen hashOpen = new HashMapOpen(false);
 
         String title = ("____    ____  ______    __    __  .___________. __    __  .______    _______     _______       ___   .___________.    ___              ___      .__   __.      ___       __      ____    ____  _______. __       _______." + "\n" +
                             "\\   \\  /   / /  __  \\  |  |  |  | |           ||  |  |  | |   _  \\  |   ____|   |       \\     /   \\  |           |   /   \\            /   \\     |  \\ |  |     /   \\     |  |     \\   \\  /   / /       ||  |     /       |" + "\n" +
@@ -44,7 +47,7 @@ public class main
                             "/* 2. Print Hash map                      *\\" + "\n" +
                             "/* 3. Fill JSON                          *\\" + "\n" + 
                             "/* 4. Create Maps                          *\\" + "\n" +
-                            "/* 5. Compare times                  *\\" + "\n" +
+                            "/* 5. Compare data                        *\\" + "\n" +
                             "/* 6. Print this menu again               *\\" + "\n" +
                             "/* 7. Exit                                *\\" + "\n" +
                             "\\\\*****************************************//");
@@ -61,32 +64,26 @@ public class main
                 case 1:
                     System.out.println("What do you want to compare?: " + "\n" + "1. Publish Dates" + "\n" + "2. Views" + "\n" + "3. Like/Dislike count");
 
-                    int choice = 0; 
+                    int choiceMap = 0; 
                     if(scan.hasNextInt())
-                        choice = scan.nextInt();
-
-    
-                    map.inOrder(choice);
+                        choiceMap = scan.nextInt();
+                        
+                    map.inOrder(choiceMap);
 
                     break;
                 case 2: 
-                    System.out.println("not implemented yet ");
-                    /* 
-                    if(choice == 1)
-                        for(Node node : hashMap)
-                            System.out.println(node.getPublishDate());
-                    else if(choice == 2)
-                        for(Node node : hashMap)
-                            System.out.println(node.getViews());
-                    else if(choice == 3)
-                        for(Node node : hashMap)
-                            System.out.println(node.getDislikeCount() + " " + node.getDislikeCount());
-                    else
-                        System.out.println("Invalid input");
-                    */
+                    System.out.println("What do you want to compare?: " + "\n" + "1. Publish Dates" + "\n" + "2. Views" + "\n" + "3. Like/Dislike count");
+
+                    int choiceHash = 0;
+                    if(scan.hasNextInt())
+                        choiceHash = scan.nextInt();
+
+                    hashMap.printHashMap(choiceHash);
+
                     break;
 
                 case 3:
+                    /*
                     System.out.println("Enter the first type of video you want to search: ");
                     videoOne = scan.next();
                     System.out.println("Enter the name of the file you want to create: ");
@@ -95,21 +92,33 @@ public class main
                     videoTwo = scan.next();
                     System.out.println("Enter the name of the file you want to create: ");
                     fileNameTwo = scan.next();
+                    */
                     
 
                     GatherData.createJson(videoOne, fileNameOne);
-                    GatherData.createJson(videoTwo, fileNameTwo);
+                    //GatherData.createJson(videoTwo, fileNameTwo);
                     break;
                 case 4:
                     InputStream inputStream = new FileInputStream(fileNameOne);
+                    InputStream inputStream2 = new FileInputStream(fileNameOne);
 
                     JsonParser parser = JSON_FACTORY.createJsonParser(inputStream, StandardCharsets.UTF_8);
-                    for(int i = 0; i < 24; i++)
+                    JsonParser parser2 = JSON_FACTORY.createJsonParser(inputStream2, StandardCharsets.UTF_8);
+
+                    for(int i = 0; i < 23; i++)
                     {
                         Node tempNode = GatherData.populateNode(parser, statsRequest);
-                        
+                        //System.out.println(i);
                         map.insert(tempNode.getChannelID(),tempNode.getChannelID(), tempNode.getVideoTitle(), tempNode.getPublishDate(), tempNode.getViews(), tempNode.getVideoID(), tempNode.getLikeCount(), tempNode.getDislikeCount());
                     }
+
+                    for(int i = 0; i < 23; i++)
+                    {
+                        Node tempNode = GatherData.populateNode(parser2, statsRequest);
+                        //System.out.println(i);
+                        hashOpen.insert(tempNode.getChannelID(),tempNode.getChannelID(), tempNode.getVideoTitle(), tempNode.getPublishDate(), tempNode.getViews(), tempNode.getVideoID(), tempNode.getLikeCount(), tempNode.getDislikeCount());
+                    }
+
                     break;
                 case 5:
                     break;
@@ -120,8 +129,10 @@ public class main
                     System.out.println("Exiting");
                     run = false; 
                     break;
+                /* 
                 default:
                     System.out.println("Invalid input");
+                */
             }
 
         }

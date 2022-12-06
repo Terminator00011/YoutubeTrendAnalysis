@@ -19,6 +19,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.json.JsonParser;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
+import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoListResponse;
 
@@ -134,9 +135,29 @@ public class GatherData {
         YouTube.Search.List request = youtubeService.search()
             .list("snippet");
 
-        SearchListResponse response = request.setMaxResults(25L)
+        
+
+
+        SearchListResponse response = request.setMaxResults(500L)
             .setQ(videoOne)
             .execute();
+
+        List <SearchResult> list =  response.getItems();
+
+        while(response.getNextPageToken() != null)
+        {
+
+            request = youtubeService.search().list("snippet").setPageToken(response.getNextPageToken());
+            
+            response = request.setMaxResults(500L).setQ(videoOne).execute();
+
+            list.addAll(response.getItems());
+        }
+
+        System.out.println(list.size());
+
+        for(SearchResult var : list)
+            System.out.println(var.getId());
 
         OutputStream out = new FileOutputStream(fileName + ".json");
         JsonGenerator generator = JSON_FACTORY.createJsonGenerator(out, StandardCharsets.UTF_8);
