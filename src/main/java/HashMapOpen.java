@@ -7,12 +7,21 @@ public class HashMapOpen {
     double loadFactor;
     boolean isLinearProbing;
 
+    private BigInteger viewTotal;
+    private  BigInteger likeTotal;
+    private Node maxView;
+    private Node maxLike;
+
     public HashMapOpen(boolean isLinearProbing)
     {
         this.hashMapOpen = new Node[16];
         this.size = 0;
         this.loadFactor = 0.75;
         this.isLinearProbing = isLinearProbing;
+        this.viewTotal = BigInteger.ZERO;
+        this.likeTotal = BigInteger.ZERO;
+        this.maxView = null;
+        this.maxLike = null;
     }
 
     public void insert(String channelID, String channelTitle, String videoTitle, String publishDate, BigInteger views, String videoID, BigInteger likeCount, BigInteger dislikeCount)
@@ -59,10 +68,15 @@ public class HashMapOpen {
             else {
                 //Insert and increase size by 1
                 Node video = new Node(channelID, channelTitle, videoTitle, publishDate, views, videoID, likeCount, dislikeCount);
+
+                if (video.getViews() == null)
+                    video.setViews(BigInteger.ZERO);
+                if (video.getLikeCount() == null)
+                    video.setLikes(BigInteger.ZERO);
+
                 hashMapOpen[index] = video;
                 size++;
                 available = true;
-                System.out.println(counter - 1);
             }
         }
 
@@ -78,5 +92,39 @@ public class HashMapOpen {
             hashMapOpen[i] = temp[i];
         }
     }
+
+    public void viewAndLikeTotalHMO()
+    {
+        for (int i = 0; i < hashMapOpen.length; i++)
+        {
+            if (hashMapOpen[i] != null)
+            {
+                if(maxLike == null && maxView == null)
+                {
+                    maxView = hashMapOpen[i];
+                    maxLike = hashMapOpen[i];
+                }
+                else
+                {
+                    if (hashMapOpen[i].getViews().compareTo(maxView.getViews()) > 0)
+                        maxView = hashMapOpen[i];
+                    if (hashMapOpen[i].getLikeCount().compareTo(maxLike.getLikeCount()) > 0)
+                        maxLike = hashMapOpen[i];
+                }
+
+                if (hashMapOpen[i] != null)
+                {
+                    viewTotal = viewTotal.add(hashMapOpen[i].getViews());
+                    likeTotal = likeTotal.add(hashMapOpen[i].getLikeCount());
+                }
+            }
+        }
+    }
+
+    public int getTotalSize() { return size; }
+    public BigInteger getViewTotal() { return viewTotal; }
+    public BigInteger getLikeTotal() { return likeTotal; }
+    public Node getMaxView() { return maxView; }
+    public Node getMaxLike() { return maxLike; }
 
 }

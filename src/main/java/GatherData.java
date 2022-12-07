@@ -20,8 +20,6 @@ import com.google.api.client.json.JsonParser;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
-import com.google.api.services.youtube.model.Video;
-import com.google.api.services.youtube.model.VideoListResponse;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -37,7 +35,7 @@ import java.util.List;
 
 
 public class GatherData {
-    private static final String CLIENT_SECRETS= "client_secret_817907432942-glt34kslnheai6ao17gul4m6qe4o3hes.apps.googleusercontent.com.json";
+    private static final String CLIENT_SECRETS= "client_secret_55019393466-iogee5ge0ibruuq9l279dipjn2scu3q7.apps.googleusercontent.com.json";
     private static final Collection<String> SCOPES =
         Arrays.asList("https://www.googleapis.com/auth/youtube.force-ssl");
 
@@ -79,23 +77,19 @@ public class GatherData {
             .build();
     }
     
-    public static Node populateNode(JsonParser parser, YouTube.Videos.List statsRequest) throws GeneralSecurityException, IOException, GoogleJsonResponseException
+    public static Node populateNode(JsonParser parser, JsonParser statReader) throws GeneralSecurityException, IOException, GoogleJsonResponseException
     {
+        BigInteger viewCount = null;
+        BigInteger likeCount = null;
+        BigInteger dislikeCount = null;
+
+
         while(parser.getText() != "videoId")
             parser.nextToken();
+
         parser.nextToken();
         String tempVideoID = parser.getText();
-
-        VideoListResponse statsResponse = statsRequest.setId(tempVideoID).execute();
-
-        List<Video> items = statsResponse.getItems();
-
-        BigInteger viewCount = items.get(0).getStatistics().getViewCount();
-
-        BigInteger likeCount = items.get(0).getStatistics().getLikeCount();
-
-        BigInteger dislikeCount = items.get(0).getStatistics().getDislikeCount();
-        
+         
         while(parser.getText() != "channelId")
             parser.nextToken();
         parser.nextToken();
@@ -115,6 +109,35 @@ public class GatherData {
             parser.nextToken();
         parser.nextToken();
         String tempTitle = parser.getText();
+
+        
+        while(statReader.getText() != "statistics")
+        {
+            statReader.nextToken();
+        }
+        statReader.nextToken();
+        statReader.nextToken();
+
+        statReader.nextToken();
+
+        statReader.nextToken();
+
+        statReader.nextToken();
+
+        statReader.nextToken();
+
+        if(statReader.getText() == "likeCount")
+        {
+            statReader.nextToken();
+            likeCount = new BigInteger(statReader.getText());
+        }
+        statReader.nextToken();
+        if(statReader.getText() == "viewCount")
+        {
+            statReader.nextToken();
+            viewCount = new BigInteger(statReader.getText());
+        }
+    
 
         return new Node(tempChannelId, tempChannelTitle, tempTitle, tempPublishDate, viewCount, tempVideoID, likeCount, dislikeCount);
     }
@@ -154,13 +177,9 @@ public class GatherData {
             request = youtubeService.search().list("snippet").setPageToken(tempToken);
             response = request.setMaxResults(500L).setQ(videoOne).execute();
 
-            System.out.println(response.getNextPageToken());
-
             list.addAll(response.getItems());
             count++;
         }
-
-        System.out.println(list.size());
 
         OutputStream out = new FileOutputStream(fileName + ".json");
         JsonGenerator generator = JSON_FACTORY.createJsonGenerator(out, StandardCharsets.UTF_8);

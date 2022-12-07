@@ -31,6 +31,16 @@ public class Node
     public BigInteger getLikeCount() { return likeCount; }
     public BigInteger getDislikeCount() { return dislikeCount; }
 
+    public void setViews(BigInteger value)
+    {
+        views = value;
+    }
+
+    public void setLikes(BigInteger value)
+    {
+        likeCount = value;
+    }
+
     public void swapColor() { red = false; }
 
     public void black() { red = false; }
