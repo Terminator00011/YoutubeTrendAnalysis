@@ -1,3 +1,5 @@
+// Referenced https://www.geeksforgeeks.org/method-class-hashcode-method-in-java/
+
 import java.math.BigInteger;
 
 public class HashMapOpen {
